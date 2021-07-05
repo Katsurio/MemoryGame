@@ -123,4 +123,17 @@ function handleCardClick(event) {
 }
 
 // when the DOM loads
-createDivsForColors(shuffledColors);
+let startBtn = document.querySelector('#start-btn');
+startBtn.addEventListener('click', function(evt) {
+  evt.preventDefault;
+  createDivsForColors(shuffledColors);
+});
+
+let restartBtn = document.querySelector('#restart-btn');
+restartBtn.addEventListener('click', function(evt) {
+  gameContainer.innerHTML = '';
+  let container = document.querySelector('.container');
+  container.appendChild(gameContainer);
+  shuffledColors = shuffle(COLORS);
+  createDivsForColors(shuffledColors);
+});
