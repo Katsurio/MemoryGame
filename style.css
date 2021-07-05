@@ -1,9 +1,21 @@
+body {
+  margin: 0;
+}
+
 #game div {
   border: 1px solid black;
   width: 15%;
   height: 200px;
   margin: 10px;
   display: inline-block;
+}
+
+#game {
+  margin: auto;
+  left: 56%;
+  top: 40%;
+  position: relative;
+  transform: translate(-50%, -50%);
 }
 
 .clicked {
@@ -24,7 +36,19 @@
 .header {
   overflow: hidden;
   background-color: #f1f1f1;
-  padding: 20px 10px;
+  padding: 10px;
+}
+
+#winner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  border: 3px solid yellow;
+  color: yellow;
+  height: 30vh;
+  width: 75vw;
 }
 
 /* Style the header links */

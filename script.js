@@ -63,38 +63,34 @@ let firstColor = '';
 let secondColor = '';
 let attempts = 0;
 let matchCount = 0
-let totalPossibleMatches = 5
+let totalPossibleMatches = 1
 
 
 // TODO: Implement this function!
 function handleCardClick(event) {
   // you can use event.target to see which element was clicked
 
-  let gameBoard = document.querySelector('#game');
-  
-
   if(firstClicked === null) {
-    gameBoard.classList.toggle('noClicks')
+    gameContainer.classList.toggle('noClicks')
     firstClicked = event.target;
     firstColor = firstClicked.classList.value;
     firstClicked.style.backgroundColor = firstColor;
     firstClicked.classList.add('clicked');
     setTimeout(function(){
-      gameBoard.classList.toggle('noClicks');
+      gameContainer.classList.toggle('noClicks');
     },1000)
   } else {
-    gameBoard.classList.toggle('noClicks')
+    gameContainer.classList.toggle('noClicks')
     secondClicked = event.target;
     secondColor = secondClicked.classList.value;
     secondClicked.style.backgroundColor = secondColor;
     secondClicked.classList.add('clicked');
     setTimeout(function(){
-      gameBoard.classList.toggle('noClicks');
+      gameContainer.classList.toggle('noClicks');
     },1000)
     
 
     if (firstColor === secondColor) {
-      console.log("Match");
       ++attempts;
       ++matchCount;
       firstColor = '';
@@ -105,11 +101,12 @@ function handleCardClick(event) {
       secondClicked = null;
 
       if(matchCount === totalPossibleMatches) {
-        console.log("YOU WON!!!");
+        let wonbanner = document.createElement('div');
+        wonbanner.setAttribute('id',"winner");
+        wonbanner.innerText = 'Winner, winner, chicken brunch!';
+        gameContainer.insertAdjacentElement('beforebegin', wonbanner);
       }
-      // debugger;
     } else {
-      console.log("NOT A MATCH");
       setTimeout(function () {
         ++attempts;
         firstColor = '';
@@ -122,8 +119,7 @@ function handleCardClick(event) {
         secondClicked = null;
       }, 1000)
     }
-  } 
-
+  }  
 }
 
 // when the DOM loads
