@@ -56,14 +56,16 @@ function createDivsForColors(colorArray) {
     gameContainer.append(newDiv);
   }
 }
-
+debugger;
 let firstClicked = null;
 let secondClicked = null;
 let firstColor = '';
 let secondColor = '';
-let attempts = 0;
+let score = 0;
 let matchCount = 0
-let totalPossibleMatches = 1
+let lowestScore = localStorage.getItem('lowestScore') || 100;
+let totalPossibleMatches = 5
+let scoreboard = document.querySelector('#score span');
 
 
 // TODO: Implement this function!
@@ -91,7 +93,8 @@ function handleCardClick(event) {
     
 
     if (firstColor === secondColor) {
-      ++attempts;
+      ++score;
+      scoreboard.innerText = score;
       ++matchCount;
       firstColor = '';
       secondColor = '';
@@ -105,10 +108,16 @@ function handleCardClick(event) {
         wonbanner.setAttribute('id',"winner");
         wonbanner.innerText = 'Winner, winner, chicken brunch!';
         gameContainer.insertAdjacentElement('beforebegin', wonbanner);
+        debugger;
+        if(score < lowestScore) {
+          debugger;
+          localStorage.setItem('lowestScore', score);
+        }
       }
     } else {
       setTimeout(function () {
-        ++attempts;
+        ++score;
+        scoreboard.innerText = score;
         firstColor = '';
         secondColor = '';
         firstClicked.classList.remove('clicked');
@@ -124,6 +133,8 @@ function handleCardClick(event) {
 
 // when the DOM loads
 let startBtn = document.querySelector('#start-btn');
+let bestScore = document.querySelector('#best-score span');
+bestScore.innerText = lowestScore || 0;
 startBtn.addEventListener('click', function(evt) {
   evt.preventDefault;
   createDivsForColors(shuffledColors);
