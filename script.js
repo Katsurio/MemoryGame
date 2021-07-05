@@ -13,6 +13,17 @@ const COLORS = [
   "purple"
 ];
 
+let firstClicked = null;
+let secondClicked = null;
+let firstColor = '';
+let secondColor = '';
+let score = 0;
+let matchCount = 0
+let lowestScore = localStorage.getItem('lowestScore') || 100;
+let totalPossibleMatches = 5
+let scoreboard = document.querySelector('#score span');
+let wonbanner = document.createElement('div');
+
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
 // it is based on an algorithm called Fisher Yates if you want ot research more
@@ -56,17 +67,6 @@ function createDivsForColors(colorArray) {
     gameContainer.append(newDiv);
   }
 }
-debugger;
-let firstClicked = null;
-let secondClicked = null;
-let firstColor = '';
-let secondColor = '';
-let score = 0;
-let matchCount = 0
-let lowestScore = localStorage.getItem('lowestScore') || 100;
-let totalPossibleMatches = 5
-let scoreboard = document.querySelector('#score span');
-
 
 // TODO: Implement this function!
 function handleCardClick(event) {
@@ -96,21 +96,19 @@ function handleCardClick(event) {
       ++score;
       scoreboard.innerText = score;
       ++matchCount;
-      firstColor = '';
-      secondColor = '';
+      // firstColor = '';
+      // secondColor = '';
       firstClicked.classList.add('noClicks');
       secondClicked.classList.add('noClicks');
-      firstClicked = null;
-      secondClicked = null;
+      // firstClicked = null;
+      // secondClicked = null;
+      resetCardsClicked ();
 
       if(matchCount === totalPossibleMatches) {
-        let wonbanner = document.createElement('div');
         wonbanner.setAttribute('id',"winner");
         wonbanner.innerText = 'Winner, winner, chicken brunch!';
         gameContainer.insertAdjacentElement('beforebegin', wonbanner);
-        debugger;
         if(score < lowestScore) {
-          debugger;
           localStorage.setItem('lowestScore', score);
         }
       }
@@ -118,14 +116,15 @@ function handleCardClick(event) {
       setTimeout(function () {
         ++score;
         scoreboard.innerText = score;
-        firstColor = '';
-        secondColor = '';
+        // firstColor = '';
+        // secondColor = '';
         firstClicked.classList.remove('clicked');
         secondClicked.classList.remove('clicked');
         firstClicked.style.backgroundColor = '';
         secondClicked.style.backgroundColor = '';
-        firstClicked = null;
-        secondClicked = null;
+        // firstClicked = null;
+        // secondClicked = null;
+        resetCardsClicked();
       }, 1000)
     }
   }  
@@ -138,6 +137,7 @@ bestScore.innerText = lowestScore || 0;
 startBtn.addEventListener('click', function(evt) {
   evt.preventDefault;
   createDivsForColors(shuffledColors);
+  startBtn.classList.add('noClicks');
 });
 
 let restartBtn = document.querySelector('#restart-btn');
@@ -147,4 +147,19 @@ restartBtn.addEventListener('click', function(evt) {
   container.appendChild(gameContainer);
   shuffledColors = shuffle(COLORS);
   createDivsForColors(shuffledColors);
+  wonbanner.remove();
+  resetStats();
 });
+
+function resetCardsClicked () {
+  firstColor = '';
+  secondColor = '';
+  firstClicked = null;
+  secondClicked = null;
+}
+
+function resetStats() {
+  score = 0;
+  matchCount = 0;
+  scoreboard.innerText = score;
+}
