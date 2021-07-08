@@ -13,14 +13,14 @@ const COLORS = [
   "purple"
 ];
 
-let firstClicked = null;
+var firstClicked = null;
 let secondClicked = null;
-let firstColor = '';
+var firstColor = '';
 let secondColor = '';
 let score = 0;
-let matchCount = 0
+let matchCount = 0;
 let lowestScore = localStorage.getItem('lowestScore') || 100;
-let totalPossibleMatches = 5
+let totalPossibleMatches = 5;
 let scoreboard = document.querySelector('#score span');
 let wonbanner = document.createElement('div');
 
@@ -73,61 +73,30 @@ function handleCardClick(event) {
   // you can use event.target to see which element was clicked
 
   if(firstClicked === null) {
-    gameContainer.classList.toggle('noClicks')
-    firstClicked = event.target;
-    firstColor = firstClicked.classList.value;
-    firstClicked.style.backgroundColor = firstColor;
-    firstClicked.classList.add('clicked');
+    handleFirstClicked(event);
     setTimeout(function(){
       gameContainer.classList.toggle('noClicks');
     },1000)
   } else {
-    gameContainer.classList.toggle('noClicks')
-    secondClicked = event.target;
-    secondColor = secondClicked.classList.value;
-    secondClicked.style.backgroundColor = secondColor;
-    secondClicked.classList.add('clicked');
+    handleSecondClicked(event);
     setTimeout(function(){
       gameContainer.classList.toggle('noClicks');
-    },1000)
-    
-
-    if (firstColor === secondColor) {
-      ++score;
-      scoreboard.innerText = score;
-      ++matchCount;
-      // firstColor = '';
-      // secondColor = '';
-      firstClicked.classList.add('noClicks');
-      secondClicked.classList.add('noClicks');
-      // firstClicked = null;
-      // secondClicked = null;
-      resetCardsClicked ();
-
-      if(matchCount === totalPossibleMatches) {
-        wonbanner.setAttribute('id',"winner");
-        wonbanner.innerText = 'Winner, winner, chicken brunch!';
-        gameContainer.insertAdjacentElement('beforebegin', wonbanner);
-        if(score < lowestScore) {
-          localStorage.setItem('lowestScore', score);
-        }
-      }
-    } else {
-      setTimeout(function () {
-        ++score;
-        scoreboard.innerText = score;
-        // firstColor = '';
-        // secondColor = '';
-        firstClicked.classList.remove('clicked');
-        secondClicked.classList.remove('clicked');
-        firstClicked.style.backgroundColor = '';
-        secondClicked.style.backgroundColor = '';
-        // firstClicked = null;
-        // secondClicked = null;
-        resetCardsClicked();
-      }, 1000)
-    }
+    },1000);
+    compareCards();
   }  
+}
+
+function resetCardsClicked () {
+  firstColor = '';
+  secondColor = '';
+  firstClicked = null;
+  secondClicked = null;
+}
+
+function resetStats() {
+  score = 0;
+  matchCount = 0;
+  scoreboard.innerText = score;
 }
 
 // when the DOM loads
@@ -151,15 +120,52 @@ restartBtn.addEventListener('click', function(evt) {
   resetStats();
 });
 
-function resetCardsClicked () {
-  firstColor = '';
-  secondColor = '';
-  firstClicked = null;
-  secondClicked = null;
+function handleFirstClicked(evt) {
+  gameContainer.classList.toggle('noClicks')
+  firstClicked = evt.target;
+  firstColor = firstClicked.classList.value;
+  firstClicked.style.backgroundColor = firstColor;
+  firstClicked.classList.add('clicked');
 }
 
-function resetStats() {
-  score = 0;
-  matchCount = 0;
-  scoreboard.innerText = score;
+function handleSecondClicked(evt) {
+  gameContainer.classList.toggle('noClicks')
+  secondClicked = evt.target;
+  secondColor = secondClicked.classList.value;
+  secondClicked.style.backgroundColor = secondColor;
+  secondClicked.classList.add('clicked');
+}
+
+
+function compareCards() {
+  if (firstColor === secondColor) {
+    ++score;
+    scoreboard.innerText = score;
+    ++matchCount;
+    firstClicked.classList.add('noClicks');
+    secondClicked.classList.add('noClicks');
+    resetCardsClicked();
+    checkWinner();
+  } else {
+    setTimeout(function () {
+      ++score;
+      scoreboard.innerText = score;
+      firstClicked.classList.remove('clicked');
+      secondClicked.classList.remove('clicked');
+      firstClicked.style.backgroundColor = '';
+      secondClicked.style.backgroundColor = '';
+      resetCardsClicked();
+    }, 1000)
+  }
+}
+
+function checkWinner() {
+  if(matchCount === totalPossibleMatches) {
+    wonbanner.setAttribute('id',"winner");
+    wonbanner.innerText = 'Winner, winner, chicken brunch!';
+    gameContainer.insertAdjacentElement('beforebegin', wonbanner);
+    if(score < lowestScore) {
+      localStorage.setItem('lowestScore', score);
+    }
+  }
 }
